@@ -11,6 +11,8 @@ export default class DragDrop extends cc.Component {
 
     draggingBrainChunk: cc.Node;
 
+    defaultDraggingBrainChunkScale: number;
+
     mouse_x: number = 0;
     mouse_y: number = 0;
 
@@ -28,13 +30,17 @@ export default class DragDrop extends cc.Component {
 
         DragDrop.instance.node.on(cc.Node.EventType.MOUSE_UP, () => {
             DragDrop.instance.draggable = false;
+
+            //return default scale for draggingBrainChunk
+            DragDrop.instance.draggingBrainChunk.scale = DragDrop.instance.defaultDraggingBrainChunkScale;
+
             //check if brain chunk is over slot to be able to add it to the slot
             if (DragDrop.instance.draggingBrainChunk.getComponent(BrainChunk).hoveringOverSlot) {
                 console.log("setting the brain into the slot");
 
                 //set Brain Chunk to specific slot
                 DragDrop.instance.draggingBrainChunk.setPosition(this.selectedBrainSlotPos);
-                
+
                 DragDrop.instance.draggingBrainChunk.getComponent(BrainChunk).hoveringOverSlot = false;
                 this.assignedBrainsToSlots.push(DragDrop.instance.draggingBrainChunk);
             } else {
@@ -55,6 +61,7 @@ export default class DragDrop extends cc.Component {
         }
     }
 
+
     setDraggableObject(BrainChunkToBeDragged: cc.Node) {
 
         BrainChunkToBeDragged.on(cc.Node.EventType.MOUSE_DOWN, (event) => {
@@ -63,6 +70,10 @@ export default class DragDrop extends cc.Component {
 
             DragDrop.instance.draggingBrainChunk = BrainChunkToBeDragged;
             DragDrop.instance.draggable = true;
+
+            //scale up the brainChunk while dragging
+            DragDrop.instance.defaultDraggingBrainChunkScale = DragDrop.instance.draggingBrainChunk.scale;
+            DragDrop.instance.draggingBrainChunk.scale += 0.05;
         });
     }
 
@@ -79,7 +90,7 @@ export default class DragDrop extends cc.Component {
             brainChunk.setPosition(brainChunk.getComponent(BrainChunk).defaultPos);
         });
 
-        this.ReservedSlots.forEach((brainSlot)=>{
+        this.ReservedSlots.forEach((brainSlot) => {
             brainSlot.getComponent(BrainSlot).SlotIsAssigned = false;
         })
 
@@ -87,9 +98,11 @@ export default class DragDrop extends cc.Component {
         this.ReservedSlots = [];
     }
 
+
+    //make the selected slot get assigned as reseverd and keep track of the slots
     ReservedSlots: Array<cc.Node> = [];
     MakeBrainSlotReserved(slot: cc.Node) {
-        slot.getComponent(BrainSlot).SlotIsAssigned = false;
+        slot.getComponent(BrainSlot).SlotIsAssigned = true;
         this.ReservedSlots.push(slot);
     }
 

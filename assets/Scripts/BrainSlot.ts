@@ -9,6 +9,7 @@ export default class BrainSlot extends cc.Component {
 
     onLoad() {
         this.SlotIsAssigned = false;
+        this.node.getComponent(cc.CircleCollider).radius = 670;
     }
 
     start() {
