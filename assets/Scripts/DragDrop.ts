@@ -1,5 +1,6 @@
 const { ccclass, property } = cc._decorator;
 import BrainChunk from "./BrainChunk"
+import BrainSlot from "./BrainSlot"
 
 @ccclass
 export default class DragDrop extends cc.Component {
@@ -8,12 +9,10 @@ export default class DragDrop extends cc.Component {
 
     draggable: boolean = false;
 
-    current_dragging_node: cc.Node;
+    draggingBrainChunk: cc.Node;
 
     mouse_x: number = 0;
     mouse_y: number = 0;
-
-    selectBrainChunk: cc.Node;
 
     init_x: number = 0;
     init_y: number = 0;
@@ -21,18 +20,28 @@ export default class DragDrop extends cc.Component {
 
     onLoad() {
         DragDrop.instance = this;
-        this.node.on(cc.Node.EventType.MOUSE_MOVE, (event) => {
-            this.mouse_x = event.getLocation().x;
-            this.mouse_y = event.getLocation().y;
+
+        DragDrop.instance.node.on(cc.Node.EventType.MOUSE_MOVE, (event) => {
+            DragDrop.instance.mouse_x = event.getLocation().x;
+            DragDrop.instance.mouse_y = event.getLocation().y;
         });
 
-        this.node.on(cc.Node.EventType.MOUSE_UP, () => {
+        DragDrop.instance.node.on(cc.Node.EventType.MOUSE_UP, () => {
             DragDrop.instance.draggable = false;
-            if (this.current_dragging_node.getComponent(BrainChunk).hoveringOverSlot) {
+            //check if brain chunk is over slot to be able to add it to the slot
+            if (DragDrop.instance.draggingBrainChunk.getComponent(BrainChunk).hoveringOverSlot) {
+                console.log("setting the brain into the slot");
 
+                //set Brain Chunk to specific slot
+                DragDrop.instance.draggingBrainChunk.setPosition(this.selectedBrainSlotPos);
+                
+                DragDrop.instance.draggingBrainChunk.getComponent(BrainChunk).hoveringOverSlot = false;
+                this.assignedBrainsToSlots.push(DragDrop.instance.draggingBrainChunk);
             } else {
-                DragDrop.instance.current_dragging_node.setPosition(DragDrop.instance.init_x, DragDrop.instance.init_y);
 
+                //get brain chunk to it primary position
+                DragDrop.instance.draggingBrainChunk.setPosition(DragDrop.instance.init_x, DragDrop.instance.init_y);
+                DragDrop.instance.draggingBrainChunk.getComponent(BrainChunk).hoveringOverSlot = false;
             }
         });
     }
@@ -41,26 +50,49 @@ export default class DragDrop extends cc.Component {
 
     update(dt) {
         if (DragDrop.instance.draggable) {
-            DragDrop.instance.current_dragging_node.x = this.mouse_x - (this.node.width / 2);
-            DragDrop.instance.current_dragging_node.y = this.mouse_y - (this.node.height / 2);
+            DragDrop.instance.draggingBrainChunk.x = this.mouse_x - (this.node.width / 2);
+            DragDrop.instance.draggingBrainChunk.y = this.mouse_y - (this.node.height / 2);
         }
     }
 
-    setDraggableObject(nodeObjectToBeDraggable: cc.Node) {
+    setDraggableObject(BrainChunkToBeDragged: cc.Node) {
 
-        nodeObjectToBeDraggable.on(cc.Node.EventType.MOUSE_DOWN, (event) => {
-            DragDrop.instance.init_x = nodeObjectToBeDraggable.position.x;
-            DragDrop.instance.init_y = nodeObjectToBeDraggable.position.y;
+        BrainChunkToBeDragged.on(cc.Node.EventType.MOUSE_DOWN, (event) => {
+            DragDrop.instance.init_x = BrainChunkToBeDragged.position.x;
+            DragDrop.instance.init_y = BrainChunkToBeDragged.position.y;
 
-            DragDrop.instance.current_dragging_node = nodeObjectToBeDraggable;
+            DragDrop.instance.draggingBrainChunk = BrainChunkToBeDragged;
             DragDrop.instance.draggable = true;
         });
     }
 
-
-    DropBrainChunkToSlot(slot: cc.Node, brainChunk: cc.Node) {
-
+    selectedBrainSlotPos: cc.Vec2;
+    getBrainSlotPosition(brainSlot: cc.Vec2) {
+        DragDrop.instance.selectedBrainSlotPos = brainSlot;
     }
+
+    //keep following up with the brain chunk to see if it used 
+    assignedBrainsToSlots: Array<cc.Node> = [];
+    BreakTheWholeBrain() {
+        console.log("breaking the brain");
+        DragDrop.instance.assignedBrainsToSlots.forEach((brainChunk) => {
+            brainChunk.setPosition(brainChunk.getComponent(BrainChunk).defaultPos);
+        });
+
+        this.ReservedSlots.forEach((brainSlot)=>{
+            brainSlot.getComponent(BrainSlot).SlotIsAssigned = false;
+        })
+
+        //emptying reserved slots
+        this.ReservedSlots = [];
+    }
+
+    ReservedSlots: Array<cc.Node> = [];
+    MakeBrainSlotReserved(slot: cc.Node) {
+        slot.getComponent(BrainSlot).SlotIsAssigned = false;
+        this.ReservedSlots.push(slot);
+    }
+
 
 
 
