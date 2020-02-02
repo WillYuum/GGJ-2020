@@ -2,7 +2,7 @@ import { get } from "http";
 
 const { ccclass, property } = cc._decorator;
 
-enum problemTypes {
+export enum problemTypes {
     VeryHard,
     Hard,
     Medium,
