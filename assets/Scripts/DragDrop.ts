@@ -104,6 +104,20 @@ export default class DragDrop extends cc.Component {
         this.ReservedSlots = [];
     }
 
+    //for testing purposes
+    clearBrainFromSlots(){
+        DragDrop.instance.assignedBrainsToSlots.forEach((brainChunk) => {
+            brainChunk.setPosition(brainChunk.getComponent(BrainChunk).defaultPos);
+        });
+
+        this.ReservedSlots.forEach((brainSlot) => {
+            brainSlot.getComponent(BrainSlot).SlotIsAssigned = false;
+        })
+
+        //emptying reserved slots
+        this.ReservedSlots = [];
+    }
+
 
     //make the selected slot get assigned as reseverd and keep track of the slots
     ReservedSlots: Array<cc.Node> = [];

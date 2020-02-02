@@ -1,5 +1,3 @@
-import { get } from "http";
-
 const { ccclass, property } = cc._decorator;
 
 enum problemTypes {
@@ -22,7 +20,7 @@ export default class ProblemManager extends cc.Component {
 
     static readonly signals = signals;
 
-    getSignals(){
+    getSignals() {
         return signals;
     }
 
@@ -37,33 +35,7 @@ export default class ProblemManager extends cc.Component {
 
     start() {
 
-
-
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, (event) => {
-            if (event.keyCode === cc.macro.KEY.space) {
-                this.HandlePlayProblems()
-            }
-            if (event.keyCode === cc.macro.KEY.a) {
-                this.node.emit(signals.fixedVeryHard.toString())
-                this.VeryHardFixed = true;
-
-            }
-            if (event.keyCode === cc.macro.KEY.s) {
-                this.node.emit(signals.fixedHard.toString())
-                this.HardFixed = true;
-            }
-            if (event.keyCode === cc.macro.KEY.d) {
-                this.node.emit(signals.fixedMedium.toString())
-                this.MediumFixed = true;
-            }
-            if (event.keyCode === cc.macro.KEY.f) {
-                console.log("emmiting")
-                this.node.emit(signals.fixedEasy.toString())
-                console.log("done emmiting")
-
-                this.EasyFixed = true
-            }
-        })
+        this.scheduleOnce(() => this.HandlePlayProblems(), 3)
     }
 
     currentProblemIndex: number = 0;
@@ -82,6 +54,10 @@ export default class ProblemManager extends cc.Component {
     }
 
     HandlePlayProblems() {
+        if (this.Problems[this.currentProblemIndex].length === this.currentProblemIndex) {
+            this.problemText.string = "Jerry can live in peace, so do meeseeks :D"
+        }
+
         let problem = this.Problems[this.currentProblemIndex][this.currentSubProblem];
         this.problemText.string = `${problem.text ? problem.text : ''} ${problem.type2 ? problem.type2 : ""} ${problem.text3 ? problem.text3 : ""}`;
         this.getCurrentProblems(problem);

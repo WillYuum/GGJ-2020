@@ -10,8 +10,8 @@ enum BrainPower {
     TrainJerry,
     SmackJerry,
     YellAtJerry
-
 }
+
 @ccclass
 export default class BrainChunk extends cc.Component {
 
