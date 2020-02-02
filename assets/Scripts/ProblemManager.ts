@@ -2,7 +2,7 @@ import { get } from "http";
 
 const { ccclass, property } = cc._decorator;
 
-export enum problemTypes {
+enum problemTypes {
     VeryHard,
     Hard,
     Medium,
@@ -20,28 +20,34 @@ enum signals {
 @ccclass
 export default class ProblemManager extends cc.Component {
 
-    @property(cc.RichText) problemText: cc.Label = null
+
+    @property(cc.RichText) problemText: cc.Label = null;
 
     VeryHardFixed: boolean = false;
     HardFixed: boolean = false;
     MediumFixed: boolean = false;
     EasyFixed: boolean = false;
 
-    // onLoad () {}
+    onLoad () {
+        ProblemManager.instance = this;
+    }
 
     start() {
+
+
+
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, (event) => {
             if (event.keyCode === cc.macro.KEY.space) {
-                this.HandlePlayProblems()
+                ProblemManager.instance.HandlePlayProblems()
             }
             if (event.keyCode === cc.macro.KEY.a) {
-                this.node.emit(signals.fixedVeryHard.toString())
-                this.VeryHardFixed = true;
+                ProblemManager.instance.node.emit(signals.fixedVeryHard.toString())
+                ProblemManager.instance.VeryHardFixed = true;
 
             }
             if (event.keyCode === cc.macro.KEY.s) {
-                this.node.emit(signals.fixedHard.toString())
-                this.HardFixed = true;
+                ProblemManager.instance.node.emit(signals.fixedHard.toString())
+                ProblemManager.instance.HardFixed = true;
             }
             if (event.keyCode === cc.macro.KEY.d) {
                 this.node.emit(signals.fixedMedium.toString())
@@ -75,8 +81,15 @@ export default class ProblemManager extends cc.Component {
     HandlePlayProblems() {
         let problem = this.Problems[this.currentProblemIndex][this.currentSubProblem];
         this.problemText.string = `${problem.text ? problem.text : ''} ${problem.type2 ? problem.type2 : ""} ${problem.text3 ? problem.text3 : ""}`;
+        this.getCurrentProblems(problem);
         console.log(this.problemText.string)
         this.PlayNextProblem();
+    }
+    currentProblems: Array<any> = []
+    getCurrentProblems(problem) {
+        problem.type ? this.currentProblems.push(problem.type) : null;
+        problem.type2 ? this.currentProblems.push(problem.type2) : null;
+        problem.type3 ? this.currentProblems.push(problem.type3) : null;
     }
 
     HardColor = "#8b0000";

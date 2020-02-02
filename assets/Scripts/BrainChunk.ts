@@ -15,11 +15,15 @@ enum BrainPower {
 @ccclass
 export default class BrainChunk extends cc.Component {
 
+    
+
     defaultPos: cc.Vec2;
+
+    isActivated: boolean = false;
 
     @property(cc.Vec2) defaultBrainChunkPos: cc.Vec2;
 
-    @property({type: cc.Enum(BrainPower)}) selectedBrainPower:BrainPower = BrainPower.KillJerry;
+    @property({ type: cc.Enum(BrainPower) }) selectedBrainPower: BrainPower = BrainPower.KillJerry;
     // onLoad() {
 
     // }
@@ -46,7 +50,7 @@ export default class BrainChunk extends cc.Component {
             // if (!other.getComponent(BrainSlot).SlotIsAssigned) {
 
             this.hoveringOverSlot = true;
-
+            this.isActivated = true;
             DragDrop.instance.getBrainSlotPosition(other.node.getPosition());
             // DragDrop.instance.MakeBrainSlotReserved(other.node);
             // } else {
