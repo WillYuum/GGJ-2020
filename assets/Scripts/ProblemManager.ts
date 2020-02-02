@@ -1,3 +1,5 @@
+import { get } from "http";
+
 const { ccclass, property } = cc._decorator;
 
 enum problemTypes {
@@ -25,40 +27,8 @@ export default class ProblemManager extends cc.Component {
     MediumFixed: boolean = false;
     EasyFixed: boolean = false;
 
-    ProblemOne: any;
-    ProblemTwo: any;
-    ProblemThree: any;
-    onLoad() {
-        this.ProblemOne = {
-            text: `<color=${this.handleChangeColor()}>Help me open this Jar!</color>`,
-            type: problemTypes.Easy,
-        }
-        this.ProblemTwo = [{
+    // onLoad () {}
 
-            text: `<color=${() => this.handleChangeColor()}>Help me get Beth back</color>`,
-            type: problemTypes.Easy
-
-        }]
-        this.ProblemThree = [{
-            text: `<color=${() => this.handleChangeColor()}>Teach me to take two strokes out of my golf game!</color>`,
-            type: problemTypes.VeryHard
-        },
-        {
-            text: `<color=${() => this.handleChangeColor()}>Teach me</color><color=${() => this.handleChangeColor()}> to take</color><color=${() => this.handleChangeColor()}> two strokes out of my golf game!</color>`,
-            type: problemTypes.Hard
-        },
-        {
-            text: `<color=${() => this.handleChangeColor()}>Teach me to take two strokes out of my gold game!</c>`,
-            type: problemTypes.Medium,
-        },
-        {
-            text: `<color=${() => this.handleChangeColor()}Teach me to take two strokes out of my gold game!</c>`,
-            type: problemTypes.Easy
-        }]
-    }
-
-
-    Problems: Array<any> = [];
     start() {
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, (event) => {
             if (event.keyCode === cc.macro.KEY.space) {
@@ -78,18 +48,13 @@ export default class ProblemManager extends cc.Component {
                 this.MediumFixed = true;
             }
             if (event.keyCode === cc.macro.KEY.f) {
+                console.log("emmiting")
                 this.node.emit(signals.fixedEasy.toString())
+                console.log("done emmiting")
+
                 this.EasyFixed = true
             }
         })
-
-        this.Problems = [
-            this.ProblemOne,
-            this.ProblemTwo,
-            this.ProblemThree,
-        ];
-        console.log(this.Problems)
-
     }
 
     currentProblemIndex: number = 0;
@@ -108,56 +73,49 @@ export default class ProblemManager extends cc.Component {
     }
 
     HandlePlayProblems() {
-        console.log(this.Problems[this.currentProblemIndex][this.currentSubProblem])
         let problem = this.Problems[this.currentProblemIndex][this.currentSubProblem];
-        console.log(problem)
-        this.problemText.string = problem.text
+        this.problemText.string = `${problem.text ? problem.text : ''} ${problem.type2 ? problem.type2 : ""} ${problem.text3 ? problem.text3 : ""}`;
+        console.log(this.problemText.string)
         this.PlayNextProblem();
     }
 
+    HardColor = "#8b0000";
+    MediumColor = "#ff0000";
+    EasyColor = "#ffff00";
+    DoneColor = "#ffffff"
+
+
     update(dt) {
-
     }
-    VeryHard = "#8b0000";
-    Hard = "#ff0000";
-    Medium = "#ffff00";
-    Easy = "#00ff00";
 
-
-    handleChangeColor() {
-        this.node.on(signals.fixedVeryHard.toString(), () => {
-            if (this.VeryHardFixed) {
-                return "#ffffff";
-            } else {
-                return this.VeryHard;
-            }
-        })
-        this.node.on(signals.fixedHard.toString(), () => {
-            if (this.HardFixed) {
-                return "#ffffff";
-            } else {
-                return this.Hard;
-            }
-        })
-        this.node.on(signals.fixedMedium.toString(), () => {
-            if (this.MediumFixed) {
-                return "#ffffff";
-            } else {
-                return this.Medium;
-            }
-        })
-        this.node.on(signals.fixedEasy.toString(), () => {
-            if (this.EasyFixed) {
-                return "#ffffff";
-            } else {
-                console.log(this.Easy)
-                return this.Easy;
-            }
-        })
-    }
+    Problems = [
+        //Problem One
+        [
+            {
+                text: `<color=${this.EasyColor}>Help me open this Jar!</c>`,
+                type: problemTypes.Easy,
+            },
+        ],
+        //Problem Two
+        [
+            {
+                text: `<color=${this.HardColor}>Teach me to take two strokes out of my golf game!</c>`,
+                type: problemTypes.VeryHard,
+            },
+            {
+                text: `<color=${this.HardColor}>Teach me to take </c>`,
+                type: problemTypes.Hard,
+                text2: `<color=${this.MediumColor}> two strokes out</c>`,
+                type2: problemTypes.Medium,
+                text3: `<color=${this.EasyColor}>of my golf game!</c>`,
+                type3: problemTypes.Easy,
+            },
+            {
+                text: `<color=${this.MediumColor}>Teach me to take two</color>`,
+                type: problemTypes.Medium,
+                text2: `<color=${this.EasyColor}>strokes out of my gold game!</color>`,
+                type2: problemTypes.Easy,
+            },
+        ]
+    ]
 }
-
-
-
-
-
