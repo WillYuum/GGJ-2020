@@ -16,11 +16,16 @@ export default class GameManager extends cc.Component {
     }
 
     HelpJerry() {
-        this.solveHardProblem(DragDrop.instance.assignedBrainsToSlots)
+        const x = this.node.getComponent(ProblemManager).getSignals()
+        console.log("here",x)
+        this.solveHardProblem(DragDrop.instance.assignedBrainsToSlots);
+        this.solveMediumProblem(DragDrop.instance.assignedBrainsToSlots);
+        this.solveEasyProblem(DragDrop.instance.assignedBrainsToSlots);
 
     }
 
     solveHardProblem(collectedBrainChunks) {
+        console.log("solving hard problem")
         let KillJerryCondition: boolean = false
         let TrainJerryCondition: boolean = false
         collectedBrainChunks.foreach((brainChunk) => {
@@ -45,23 +50,39 @@ export default class GameManager extends cc.Component {
         let TrainJerryCondtion: boolean = false;
         let SmackJarryCondition: boolean = false;
 
-        collectedBrainChunks.foreach((brainChunk)=>{
-            if(brainChunk.getComponent(BrainChunk).selectedBrainPower === 1){
+        collectedBrainChunks.foreach((brainChunk) => {
+            if (brainChunk.getComponent(BrainChunk).selectedBrainPower === 1) {
                 TrainJerryCondtion = true;
             }
-            if(brainChunk.getComponent(BrainChunk).selectedBrainPower === 1){
+            if (brainChunk.getComponent(BrainChunk).selectedBrainPower === 1) {
                 SmackJarryCondition = true;
             }
         })
 
-        if(TrainJerryCondtion && SmackJarryCondition){
-            return true
-        }else{
+        if (TrainJerryCondtion && SmackJarryCondition) {
+            return true;
+        } else {
             DragDrop.instance.BreakTheWholeBrain()
+            return;
         }
     }
 
-    solveSmallProblem() {
+    solveEasyProblem(collectedBrainChunks) {
+        let TrainingJerryCondition = false;
+
+        collectedBrainChunks.foreach((brainChunk) => {
+            if (brainChunk.getComponent(BrainChunk).selectedBrainPower === 1) {
+                TrainingJerryCondition = true;
+            }
+        })
+
+        if (TrainingJerryCondition) {
+            return true;
+        } else {
+            DragDrop.instance.BreakTheWholeBrain();
+            return;
+        }
+
 
     }
 

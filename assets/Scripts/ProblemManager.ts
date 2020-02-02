@@ -20,6 +20,11 @@ enum signals {
 @ccclass
 export default class ProblemManager extends cc.Component {
 
+    static readonly signals = signals;
+
+    getSignals(){
+        return signals;
+    }
 
     @property(cc.RichText) problemText: cc.Label = null;
 
@@ -28,9 +33,7 @@ export default class ProblemManager extends cc.Component {
     MediumFixed: boolean = false;
     EasyFixed: boolean = false;
 
-    onLoad () {
-        ProblemManager.instance = this;
-    }
+    // onLoad () {}
 
     start() {
 
@@ -38,16 +41,16 @@ export default class ProblemManager extends cc.Component {
 
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, (event) => {
             if (event.keyCode === cc.macro.KEY.space) {
-                ProblemManager.instance.HandlePlayProblems()
+                this.HandlePlayProblems()
             }
             if (event.keyCode === cc.macro.KEY.a) {
-                ProblemManager.instance.node.emit(signals.fixedVeryHard.toString())
-                ProblemManager.instance.VeryHardFixed = true;
+                this.node.emit(signals.fixedVeryHard.toString())
+                this.VeryHardFixed = true;
 
             }
             if (event.keyCode === cc.macro.KEY.s) {
-                ProblemManager.instance.node.emit(signals.fixedHard.toString())
-                ProblemManager.instance.HardFixed = true;
+                this.node.emit(signals.fixedHard.toString())
+                this.HardFixed = true;
             }
             if (event.keyCode === cc.macro.KEY.d) {
                 this.node.emit(signals.fixedMedium.toString())
