@@ -83,10 +83,12 @@ export default class ProblemManager extends cc.Component {
             }
         })
 
-        this.Problems.push(this.ProblemOne)
-        this.Problems.push(this.ProblemTwo)
-        this.Problems.push(this.ProblemThree)
-
+        this.Problems = [
+            this.ProblemOne,
+            this.ProblemTwo,
+            this.ProblemThree,
+        ];
+        console.log(this.Problems)
 
     }
 
@@ -106,7 +108,9 @@ export default class ProblemManager extends cc.Component {
     }
 
     HandlePlayProblems() {
+        console.log(this.Problems[this.currentProblemIndex][this.currentSubProblem])
         let problem = this.Problems[this.currentProblemIndex][this.currentSubProblem];
+        console.log(problem)
         this.problemText.string = problem.text
         this.PlayNextProblem();
     }
