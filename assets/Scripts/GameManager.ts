@@ -17,7 +17,7 @@ export default class GameManager extends cc.Component {
 
     HelpJerry() {
         const x = this.node.getComponent(ProblemManager).getSignals()
-        console.log("here",x)
+        console.log("here", x)
         this.solveHardProblem(DragDrop.instance.assignedBrainsToSlots);
         this.solveMediumProblem(DragDrop.instance.assignedBrainsToSlots);
         this.solveEasyProblem(DragDrop.instance.assignedBrainsToSlots);
@@ -25,10 +25,15 @@ export default class GameManager extends cc.Component {
     }
 
     solveHardProblem(collectedBrainChunks) {
-        console.log("solving hard problem")
+        console.log("solving hard problem");
         let KillJerryCondition: boolean = false
         let TrainJerryCondition: boolean = false
         collectedBrainChunks.foreach((brainChunk) => {
+            if (brainChunk.getComponent(BrainChunk).selectedBrainPower !== 0 || 1){
+                console.log("solving hard problem failed because of wrong pattern")
+                return;
+            }
+
             if (brainChunk.getComponent(BrainChunk).selectedBrainPower === 0) {
                 KillJerryCondition = true;
             }
@@ -38,46 +43,61 @@ export default class GameManager extends cc.Component {
         })
 
         if (KillJerryCondition && TrainJerryCondition) {
-            return true
+            console.log("finished solving a problem")
         } else {
             DragDrop.instance.BreakTheWholeBrain();
+            return;
         }
 
 
     }
 
     solveMediumProblem(collectedBrainChunks) {
+        console.log("trying to solve medium problem");
         let TrainJerryCondtion: boolean = false;
         let SmackJarryCondition: boolean = false;
 
         collectedBrainChunks.foreach((brainChunk) => {
+            if (brainChunk.getComponent(BrainChunk).selectedBrainPower !== 0 || 1){
+                console.log("there was wrong in pattern in medium");
+                return;
+            } 
+
             if (brainChunk.getComponent(BrainChunk).selectedBrainPower === 1) {
                 TrainJerryCondtion = true;
             }
-            if (brainChunk.getComponent(BrainChunk).selectedBrainPower === 1) {
+            if (brainChunk.getComponent(BrainChunk).selectedBrainPower === 2) {
                 SmackJarryCondition = true;
             }
         })
 
         if (TrainJerryCondtion && SmackJarryCondition) {
+            console.log("solved the medium problem");
             return true;
         } else {
-            DragDrop.instance.BreakTheWholeBrain()
+            DragDrop.instance.BreakTheWholeBrain();
             return;
         }
     }
 
     solveEasyProblem(collectedBrainChunks) {
+        console.log("solving easy problem")
         let TrainingJerryCondition = false;
 
         collectedBrainChunks.foreach((brainChunk) => {
+            if (brainChunk.getComponent(BrainChunk).selectedBrainPower !== 1) {
+                console.log("there was wrong in the pattern in hard");
+                return;
+            }
+
+
             if (brainChunk.getComponent(BrainChunk).selectedBrainPower === 1) {
                 TrainingJerryCondition = true;
             }
         })
 
         if (TrainingJerryCondition) {
-            return true;
+            console.log("finished solving easy problem");
         } else {
             DragDrop.instance.BreakTheWholeBrain();
             return;
