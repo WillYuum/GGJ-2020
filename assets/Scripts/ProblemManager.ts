@@ -111,9 +111,9 @@ export default class ProblemManager extends cc.Component {
                 type3: problemTypes.Easy,
             },
             {
-                text: `<color=${this.MediumColor}>Teach me to take two</color>`,
+                text: `<color=${this.MediumColor}>Teach me to take two</c>`,
                 type: problemTypes.Medium,
-                text2: `<color=${this.EasyColor}>strokes out of my gold game!</color>`,
+                text2: `<color=${this.EasyColor}>strokes out of my gold game!</c>`,
                 type2: problemTypes.Easy,
             },
         ]
