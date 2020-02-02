@@ -18,7 +18,7 @@ export default class BrainChunk extends cc.Component {
         this.defaultPos = this.node.getPosition();
         this.hoveringOverSlot = false;
 
-        this.addComponent(cc.CircleCollider).radius = 455;
+        this.addComponent(cc.CircleCollider).radius = 300;
         DragDrop.instance.setDraggableObject(this.node);
         cc.director.getCollisionManager().enabled = true;
     }

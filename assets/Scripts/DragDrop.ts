@@ -41,6 +41,9 @@ export default class DragDrop extends cc.Component {
                 //set Brain Chunk to specific slot
                 DragDrop.instance.draggingBrainChunk.setPosition(this.selectedBrainSlotPos);
 
+                // let returnTweenToOriginPosition = cc.moveTo(10, this.selectedBrainSlotPos)
+                // DragDrop.instance.draggingBrainChunk.runAction(returnTweenToOriginPosition)
+
                 DragDrop.instance.draggingBrainChunk.getComponent(BrainChunk).hoveringOverSlot = false;
                 this.assignedBrainsToSlots.push(DragDrop.instance.draggingBrainChunk);
             } else {
@@ -68,12 +71,15 @@ export default class DragDrop extends cc.Component {
             DragDrop.instance.init_x = BrainChunkToBeDragged.position.x;
             DragDrop.instance.init_y = BrainChunkToBeDragged.position.y;
 
+            
             DragDrop.instance.draggingBrainChunk = BrainChunkToBeDragged;
             DragDrop.instance.draggable = true;
-
+            
             //scale up the brainChunk while dragging
             DragDrop.instance.defaultDraggingBrainChunkScale = DragDrop.instance.draggingBrainChunk.scale;
             DragDrop.instance.draggingBrainChunk.scale += 0.05;
+            
+            console.log(DragDrop.instance.draggingBrainChunk)
         });
     }
 

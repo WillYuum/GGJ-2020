@@ -5,7 +5,6 @@ export default class GameManager extends cc.Component {
 
     onLoad() {
         cc.director.getCollisionManager().enabled = true;
-        cc.director.getCollisionManager().enabledDebugDraw = true;
     }
 
     start() {
